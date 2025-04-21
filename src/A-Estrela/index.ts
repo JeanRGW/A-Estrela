@@ -13,7 +13,11 @@ function ordenarAbertos<T extends IEstado<T>>(listaAbertos: T[]) {
     listaAbertos.sort((a, b) => (a.f < b.f ? -1 : 1));
 }
 
-export default function A_Estrela<T extends IEstado<T>>(estadoInicial: T, estadoFinal: T): T[] | null {
+// Definição genérica de algoritmo A* para encontrar o caminho mais curto
+export default function A_Estrela<T extends IEstado<T>>(
+    estadoInicial: T,
+    estadoFinal: T
+): T[] | null {
     const listaAbertos: T[] = [estadoInicial];
     const listaFechados: T[] = [];
 
@@ -28,7 +32,8 @@ export default function A_Estrela<T extends IEstado<T>>(estadoInicial: T, estado
 
         for (const vizinho of estadoAtual.vizinhos()) {
             if (!listaContem(listaFechados, vizinho)) {
-                const gTentativa = estadoAtual.g + estadoAtual.distancia(vizinho);
+                const gTentativa =
+                    estadoAtual.g + estadoAtual.distancia(vizinho);
 
                 if (!listaContem(listaAbertos, vizinho)) {
                     listaAbertos.push(vizinho);

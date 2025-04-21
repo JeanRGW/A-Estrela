@@ -1,17 +1,18 @@
-import A_Estrela from "./A-Estrela";
-import adicionarEstados from "./A-Estrela/model/LabirintoEstados";
 import EntradaIA from "./Jogo/model/EntradaIA";
-import Jogo from "./Jogo/model/Jogo";
-import gerarLabirinto from "./Jogo/model/Labirinto";
+import EntradaJogador from "./Jogo/model/EntradaJogador";
+import Jogo from "./Jogo";
 
-// const labirinto = gerarLabirinto(11);
+let conc = 0;
 
-// const LabirintoEstados = adicionarEstados(labirinto);
+for (let i = 0; i < 1; i++) {
+    const jogo = new Jogo(25, new EntradaIA());
+    jogo.iniciarJogo().then(() => {
+        const [x, y] = jogo.getPosicao();
+        const tC = jogo.getTesourosColetados();
+        const tT = jogo.getTesourosTotais();
 
-// const caminho = A_Estrela(LabirintoEstados[0][0].estado, LabirintoEstados[LabirintoEstados.length - 1][LabirintoEstados.length -1 ].estado);
-
-// console.log(caminho);
-
-const jogo = new Jogo(11, new EntradaIA());
-jogo.iniciarJogo().then(() => console.log("Ok"))
-
+        if (x !== 24 || y !== 24 || tC !== tT)
+            throw new Error("Solução inválida");
+        else console.log("Concluídos:" + ++conc);
+    });
+}

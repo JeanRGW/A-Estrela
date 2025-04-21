@@ -25,14 +25,12 @@ export default class EntradaJogador extends EventEmitter implements IInput {
         return "Entrada do jogador";
     }
 
-    public setOn(){
+    public setOn() {
         process.stdin.setRawMode(true);
         process.stdin.resume();
-
-        // process.stdin.removeAllListeners("data");
     }
 
-    public setOff(){
+    public setOff() {
         process.stdin.setRawMode(false);
         process.stdin.resume();
     }

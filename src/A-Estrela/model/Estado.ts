@@ -1,11 +1,5 @@
 import type { IEstado, LabirintoEstados } from "../types/types";
-
-const directions = [
-    [-1, 0],
-    [0, -1],
-    [1, 0],
-    [0, 1]
-];
+import { directions } from "../../Jogo/utils/directions";
 
 export default class Estado implements IEstado<Estado> {
     mapa: LabirintoEstados;
@@ -31,7 +25,12 @@ export default class Estado implements IEstado<Estado> {
             const x = this.pos[0] + dx;
             const y = this.pos[1] + dy;
 
-            if (x >= 0 && x < this.mapa.length && y >= 0 && y < this.mapa[0].length) {
+            if (
+                x >= 0 &&
+                x < this.mapa.length &&
+                y >= 0 &&
+                y < this.mapa[0].length
+            ) {
                 if (this.mapa[x][y].valor !== 1) {
                     vizinhos.push(this.mapa[x][y].estado);
                 }
@@ -46,11 +45,17 @@ export default class Estado implements IEstado<Estado> {
     }
 
     distancia(vizinho: Estado): number {
-        return Math.abs(vizinho.pos[0] - this.pos[0]) + Math.abs(vizinho.pos[1] - this.pos[1]);
+        return (
+            Math.abs(vizinho.pos[0] - this.pos[0]) +
+            Math.abs(vizinho.pos[1] - this.pos[1])
+        );
     }
 
     heuristica(meta: Estado): number {
-        return Math.abs(this.pos[0] - meta.pos[0]) + Math.abs(this.pos[1] - meta.pos[1]);
+        return (
+            Math.abs(this.pos[0] - meta.pos[0]) +
+            Math.abs(this.pos[1] - meta.pos[1])
+        );
     }
 
     caminho(): Estado[] {
@@ -60,7 +65,7 @@ export default class Estado implements IEstado<Estado> {
 
         while (estadoC !== null) {
             caminho.unshift(estadoC);
-            const temp = estadoC.pai
+            const temp = estadoC.pai;
             estadoC.pai = null;
             estadoC = temp;
         }

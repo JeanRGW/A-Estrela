@@ -1,10 +1,12 @@
+import { directions } from "../utils/directions";
+
 type Labirinto = number[][];
 
 enum ELEMENTOS {
     CAMINHO = 0,
     PAREDE = 1,
     TESOURO = 2,
-    META = 3
+    META = 3,
 }
 
 function embaralharPilha(arr: [number, number][]): void {
@@ -18,7 +20,11 @@ function colocarTesouro(labirinto: Labirinto): void {
     const caminhos: [number, number][] = [];
     for (let i = 0; i < labirinto.length; i++) {
         for (let j = 0; j < labirinto[0].length; j++) {
-            if (labirinto[i][j] === ELEMENTOS.CAMINHO && (i !== 0 || j !== 0) && (i !== labirinto.length - 1 || j !== labirinto[0].length - 1)) {
+            if (
+                labirinto[i][j] === ELEMENTOS.CAMINHO &&
+                (i !== 0 || j !== 0) &&
+                (i !== labirinto.length - 1 || j !== labirinto[0].length - 1)
+            ) {
                 caminhos.push([i, j]);
             }
         }
@@ -26,7 +32,7 @@ function colocarTesouro(labirinto: Labirinto): void {
 
     let nTesouros = Math.floor(Math.random() * 3) + 1; // Número aleatório de tesouros entre 1 e 3
 
-    while(nTesouros > 0 && caminhos.length > 0) {
+    while (nTesouros > 0 && caminhos.length > 0) {
         const selecionado = Math.floor(Math.random() * caminhos.length);
         const [x, y] = caminhos.splice(selecionado, 1)[0]; // Remove o tesouro da lista de caminhos
         labirinto[x][y] = ELEMENTOS.TESOURO;
@@ -38,7 +44,10 @@ export default function gerarLabirinto(size: number): Labirinto {
     function criarCaminho(labirinto: Labirinto): void {
         const stack: [number, number][] = [[0, 0]];
         const direcoes = [
-            [0, 1], [1, 0], [0, -1], [-1, 0]
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
         ];
 
         while (stack.length > 0) {
@@ -55,38 +64,45 @@ export default function gerarLabirinto(size: number): Labirinto {
                 const ny = y + dy * 2;
 
                 if (
-                    nx >= 0 && ny >= 0 &&
-                    nx < labirinto.length && ny < labirinto[0].length &&
-                    (labirinto[nx][ny] === ELEMENTOS.PAREDE || Math.random() < 0.04)
+                    nx >= 0 &&
+                    ny >= 0 &&
+                    nx < labirinto.length &&
+                    ny < labirinto[0].length &&
+                    (labirinto[nx][ny] === ELEMENTOS.PAREDE ||
+                        Math.random() < 0.04)
                 ) {
-                    if(stack.length < 5 || Math.random() > 0.5) { // Possívelmente ignora o caminho, mais randômico
+                    if (stack.length < 5 || Math.random() > 0.5) {
+                        // Possívelmente ignora o caminho, mais randômico
                         labirinto[x + dx][y + dy] = ELEMENTOS.CAMINHO;
                         labirinto[nx][ny] = ELEMENTOS.CAMINHO;
                         stack.push([nx, ny]);
                     }
-                    
+
                     embaralharPilha(stack);
                 }
             }
         }
     }
 
-    if(size % 2 === 0) {
-        throw new Error("O tamanho do labirinto deve ser um número ímpar.");
+    if (size % 2 === 0) {
+        throw new Error(
+            "O tamanho do labirinto deve ser um número ímpar, número utilizado: " +
+                size
+        );
         size += 1;
     }
 
-    const labirinto: Labirinto = Array.from({ length: size }, () => Array(size).fill(ELEMENTOS.PAREDE));
+    const labirinto: Labirinto = Array.from({ length: size }, () =>
+        Array(size).fill(ELEMENTOS.PAREDE)
+    );
     labirinto[0][0] = ELEMENTOS.CAMINHO; // Start point
 
     criarCaminho(labirinto);
     colocarTesouro(labirinto);
     labirinto[size - 1][size - 1] = ELEMENTOS.META;
 
-    if(labirintoSolucionavel(labirinto))
-        return labirinto;
-    else
-        return gerarLabirinto(size); // Gera um novo labirinto se o atual não for solucionável
+    if (labirintoSolucionavel(labirinto)) return labirinto;
+    else return gerarLabirinto(size); // Gera um novo labirinto se o atual não for solucionável
 }
 
 export function labirintoSolucionavel(labirinto: Labirinto): boolean {
@@ -105,12 +121,15 @@ export function labirintoSolucionavel(labirinto: Labirinto): boolean {
         }
     }
 
-    const directions = [
-        [0, 1], [1, 0], [0, -1], [-1, 0]
-    ];
-
     function floodFill(x: number, y: number): boolean {
-        if (x < 0 || y < 0 || x >= size || y >= size || visited[x][y] || labirinto[x][y] === ELEMENTOS.PAREDE) {
+        if (
+            x < 0 ||
+            y < 0 ||
+            x >= size ||
+            y >= size ||
+            visited[x][y] ||
+            labirinto[x][y] === ELEMENTOS.PAREDE
+        ) {
             return false;
         }
 
