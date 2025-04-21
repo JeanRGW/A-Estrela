@@ -1,4 +1,4 @@
-export default interface IEstado<T extends IEstado<T>> {
+export interface IEstado<T extends IEstado<T>> {
     g: number; // Cost from start
     h: number; // Estimated cost to the goal
     f: number; // Total estimated cost
@@ -9,3 +9,8 @@ export default interface IEstado<T extends IEstado<T>> {
     heuristica: (meta: T) => number; // Heuristic cost to the goal
     caminho: () => T[]; // Reconstructs the path
 }
+
+export type LabirintoEstados = {
+    valor: number;
+    estado: Estado;
+}[][];

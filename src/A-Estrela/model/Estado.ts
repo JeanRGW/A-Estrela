@@ -1,5 +1,4 @@
-import IEstado from "../types/IEstado";
-import { LabirintoEstados } from "./Labirinto";
+import type { IEstado, LabirintoEstados } from "../types/types";
 
 const directions = [
     [-1, 0],
