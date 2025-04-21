@@ -39,7 +39,7 @@ export default class Jogo {
         this.input.setOn(this.labirinto);
 
         this.input.on("teclaPressionada", (direcao: string) => {
-            if(!this.jogoEncerrado()) {
+            if (!this.jogoEncerrado()) {
                 try {
                     this.mover(direcao);
                     this.printJogo();
@@ -57,13 +57,7 @@ export default class Jogo {
             }
         }, 100);
 
-        (async () => {
-            while (!this.jogoEncerrado()) {
-                await new Promise(resolve => setTimeout(resolve, 100));
-            }
-        })();
-
-        this.printJogo();
+        // await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     private mover(direcao: string): void {
@@ -98,7 +92,7 @@ export default class Jogo {
         }
     }
 
-    public jogoEncerrado(){
+    public jogoEncerrado() {
         const [x, y] = this.posicao;
 
         if (this.labirinto[x][y] === 3 && this.tesourosColetados === this.tesourosTotais) {

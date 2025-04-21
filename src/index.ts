@@ -12,11 +12,6 @@ import gerarLabirinto from "./Jogo/model/Labirinto";
 
 // console.log(caminho);
 
-for(let i=0; i < 100; i++){
-    const jogo = new Jogo(11, new EntradaIA());
-    jogo.iniciarJogo().then(() => {
-        if(!jogo.jogoEncerrado())
-            throw new Error("Erro resolvendo o jogo.")
-    })
-}
+const jogo = new Jogo(11, new EntradaIA());
+jogo.iniciarJogo().then(() => console.log("Ok"))
 

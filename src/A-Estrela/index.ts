@@ -18,16 +18,10 @@ export default function A_Estrela<T extends IEstado<T>>(estadoInicial: T, estado
     const listaFechados: T[] = [];
 
     while (listaAbertos.length > 0) {
-        console.log("While")
-
         const estadoAtual = listaAbertos.shift() as T;
-
-        console.log(estadoAtual)
 
         if (estadoAtual.equals(estadoFinal)) {
             return estadoAtual.caminho();
-        } else {
-            console.log("Not if")
         }
 
         listaFechados.push(estadoAtual);
@@ -37,7 +31,6 @@ export default function A_Estrela<T extends IEstado<T>>(estadoInicial: T, estado
                 const gTentativa = estadoAtual.g + estadoAtual.distancia(vizinho);
 
                 if (!listaContem(listaAbertos, vizinho)) {
-                    console.log("Novo vizinho.")
                     listaAbertos.push(vizinho);
                 } else if (gTentativa >= vizinho.g) {
                     // Novo caminho não é melhor que o antigo
@@ -51,12 +44,8 @@ export default function A_Estrela<T extends IEstado<T>>(estadoInicial: T, estado
             }
         }
 
-        console.log("Ordenando lista de abertos")
-
         ordenarAbertos(listaAbertos);
     }
-
-    console.log("Retornando null")
 
     return null;
 }
