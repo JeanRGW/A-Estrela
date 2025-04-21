@@ -32,7 +32,7 @@ export default class Estado implements IEstado<Estado> {
             const y = this.pos[1] + dy;
 
             if (x >= 0 && x < this.mapa.length && y >= 0 && y < this.mapa[0].length) {
-                if (this.mapa[x][y].valor === 0) {
+                if (this.mapa[x][y].valor !== 1) {
                     vizinhos.push(this.mapa[x][y].estado);
                 }
             }
@@ -56,10 +56,13 @@ export default class Estado implements IEstado<Estado> {
     caminho(): Estado[] {
         const caminho: Estado[] = [this];
         let estadoC = this.pai;
+        this.pai = null;
 
         while (estadoC !== null) {
             caminho.unshift(estadoC);
-            estadoC = estadoC.pai;
+            const temp = estadoC.pai
+            estadoC.pai = null;
+            estadoC = temp;
         }
 
         return caminho;

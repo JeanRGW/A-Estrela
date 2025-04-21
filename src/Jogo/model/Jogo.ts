@@ -1,19 +1,23 @@
+import { EventEmitter } from "stream";
 import gerarLabirinto from "./Labirinto";
+import EntradaJogador from "./EntradaJogador";
+import IInput from "../types/types";
 
 export default class Jogo {
     private labirinto: number[][];
     private posicao: [number, number] = [0, 0];
     private tesourosColetados: number = 0;
     private tesourosTotais: number = 0;
+    private input: IInput;
 
-    // Símbolos em base 2 para visualização mais proporcional.
     private readonly simboloJogador: string = '👤';
     private readonly simboloTesouro: string = '💰';
     private readonly simboloParede: string = '⬛';
     private readonly simboloCaminho: string = '⬜';
     private readonly simboloMeta: string = '🏁';
 
-    constructor(tamanho: number) {
+    constructor(tamanho: number, input: IInput) {
+        this.input = input;
         this.labirinto = gerarLabirinto(tamanho);
         this.tesourosTotais = this.contarTesouros();
     }
@@ -30,7 +34,39 @@ export default class Jogo {
         return contador;
     }
 
-    public mover(direcao: string): boolean {
+    public async iniciarJogo(): Promise<void> {
+        this.printJogo();
+        this.input.setOn(this.labirinto);
+
+        this.input.on("teclaPressionada", (direcao: string) => {
+            if(!this.jogoEncerrado()) {
+                try {
+                    this.mover(direcao);
+                    this.printJogo();
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        })
+
+        const interval = setInterval(() => {
+            if (this.jogoEncerrado()) {
+                console.log("Parabéns! Você coletou todos os tesouros e chegou à meta!");
+                clearInterval(interval);
+                this.input.setOff();
+            }
+        }, 100);
+
+        (async () => {
+            while (!this.jogoEncerrado()) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        })();
+
+        this.printJogo();
+    }
+
+    private mover(direcao: string): void {
         const [x, y] = this.posicao;
         let novoX = x;
         let novoY = y;
@@ -59,15 +95,17 @@ export default class Jogo {
                 this.tesourosColetados++;
                 this.labirinto[novoX][novoY] = 0; // Remove o tesouro do labirinto
             }
-
-            if (this.labirinto[novoX][novoY] === 3 && this.tesourosColetados === this.tesourosTotais) {
-                return true;
-            }
-
-            return false;
-        } else {
-            throw new Error('Movimento inválido');
         }
+    }
+
+    public jogoEncerrado(){
+        const [x, y] = this.posicao;
+
+        if (this.labirinto[x][y] === 3 && this.tesourosColetados === this.tesourosTotais) {
+            return true;
+        }
+
+        return false;
     }
 
     public getPosicao(): [number, number] {
