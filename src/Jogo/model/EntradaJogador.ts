@@ -33,6 +33,7 @@ export default class EntradaJogador extends EventEmitter implements IInput {
     public setOff() {
         process.stdin.setRawMode(false);
         process.stdin.resume();
+        process.stdin.removeAllListeners();
     }
 }
 

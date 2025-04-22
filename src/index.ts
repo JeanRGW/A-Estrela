@@ -2,17 +2,26 @@ import EntradaIA from "./Jogo/model/EntradaIA";
 import EntradaJogador from "./Jogo/model/EntradaJogador";
 import Jogo from "./Jogo";
 
-let conc = 0;
+const jogo = new Jogo(25, new EntradaIA());
+jogo.iniciarJogo();
 
-for (let i = 0; i < 1; i++) {
-    const jogo = new Jogo(25, new EntradaIA());
-    jogo.iniciarJogo().then(() => {
-        const [x, y] = jogo.getPosicao();
-        const tC = jogo.getTesourosColetados();
-        const tT = jogo.getTesourosTotais();
+// Utilizado para benchmarks
 
-        if (x !== 24 || y !== 24 || tC !== tT)
-            throw new Error("Solução inválida");
-        else console.log("Concluídos:" + ++conc);
-    });
-}
+// const jogos: Jogo[] = [];
+
+// for (let i = 0; i < 1000; i++) {
+//     jogos.push(new Jogo(25, new EntradaIA(), true));
+// }
+
+// const promessas = [];
+
+// console.time("executando");
+
+// for (const jogo of jogos) {
+//     promessas.push(jogo.iniciarJogo());
+// }
+
+// Promise.all(promessas).then(() => {
+//     console.log("Todos os jogos foram executados.");
+//     console.timeEnd("executando");
+// });

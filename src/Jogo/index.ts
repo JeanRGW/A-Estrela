@@ -7,6 +7,7 @@ export default class Jogo {
     private tesourosColetados: number = 0;
     private tesourosTotais: number = 0;
     private input: IInput;
+    private ignoreLogs: boolean;
 
     private readonly simboloJogador: string = "👤";
     private readonly simboloTesouro: string = "💰";
@@ -14,10 +15,11 @@ export default class Jogo {
     private readonly simboloCaminho: string = "⬜";
     private readonly simboloMeta: string = "🏁";
 
-    constructor(tamanho: number, input: IInput) {
+    constructor(tamanho: number, input: IInput, ignoreLogs = false) {
         this.input = input;
         this.labirinto = gerarLabirinto(tamanho);
         this.tesourosTotais = this.contarTesouros();
+        this.ignoreLogs = ignoreLogs;
     }
 
     private contarTesouros(): number {
@@ -53,9 +55,10 @@ export default class Jogo {
         await new Promise<void>((resolve) => {
             const checkInterval = setInterval(() => {
                 if (this.jogoEncerrado()) {
-                    console.log(
-                        "Parabéns! Você coletou todos os tesouros e chegou à meta!"
-                    );
+                    if (!this.ignoreLogs)
+                        console.log(
+                            "Parabéns! Você coletou todos os tesouros e chegou à meta!"
+                        );
                     clearInterval(checkInterval);
 
                     // Desliga os inputs e remove o listener
@@ -156,7 +159,9 @@ export default class Jogo {
 
         quadro += this.simboloParede.repeat(this.labirinto[0].length + 2); // Borda no final do labirinto
 
-        console.clear(); // Limpa o terminal
-        console.log(quadro); // Imprime o labirinto no terminal
+        if (!this.ignoreLogs) {
+            console.clear(); // Limpa o terminal
+            console.log(quadro); // Imprime o labirinto no terminal
+        }
     }
 }
